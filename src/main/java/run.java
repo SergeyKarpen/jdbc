@@ -1,28 +1,25 @@
-import com.karpen.jdbc.repository.io.JsonSkillRepositoryImpl;
-import com.karpen.jdbc.util.ConnectToDataBase;
+import com.karpen.jdbc.repository.jdbc.JdbcAccountsRepositoryImpl;
 
-import java.sql.*;
+import java.sql.SQLException;
 
 class run {
 
-    static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://localhost/developers?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
-    static final String USER = "root";
-    static final String PASSWORD = "paranido2";
+    public static void main(String[] args) throws SQLException {
 
-        /*
+/*
         MainMenu runner = new MainMenu();
-        runner.showMainMenu();
+        try {
+            runner.showMainMenu();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+*/
 
-         */
+        JdbcAccountsRepositoryImpl jdbcSkillsRepository = new JdbcAccountsRepositoryImpl();
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        JsonSkillRepositoryImpl jsonSkillRepository = new JsonSkillRepositoryImpl();
-        jsonSkillRepository.getAll();
-        ConnectToDataBase connectToDataBase = new ConnectToDataBase();
-
-        jsonSkillRepository.getById((long) 2);
-
+        System.out.println(jdbcSkillsRepository.getAll())
+        ;
     }
+
 }

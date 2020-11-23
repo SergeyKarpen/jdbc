@@ -1,9 +1,6 @@
 package com.karpen.jdbc.util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class ConnectToDataBase {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -20,7 +17,6 @@ public class ConnectToDataBase {
             System.out.println("Unable to load class.");
             e.printStackTrace();
         }
-
         try {
             connection = DriverManager.getConnection(DATABASE_URL, USER, PASSWORD);
         } catch (SQLException throwables) {
@@ -29,7 +25,15 @@ public class ConnectToDataBase {
         return connection;
     }
 
-    public static Statement statement(Connection connection) {
+    public static void closeConnectToDB(Connection connection) {
+        try {
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static Statement openStatement(Connection connection) {
         Statement statement = null;
         try {
             statement = connection.createStatement();
@@ -39,20 +43,29 @@ public class ConnectToDataBase {
         return statement;
     }
 
-    public static void closeConnectToDataBase(Statement statement, Connection connection) {
+    public static void closeStatement(Statement statement) {
         try {
-            try {
-                statement.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            try {
-                connection.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            statement.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static ResultSet result(Statement statement, String inputSQL) {
+        ResultSet resultSet = null;
+        try {
+            resultSet = statement.executeQuery(inputSQL);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    public static void closeResult(ResultSet resultSet) {
+        try {
+            resultSet.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 }

@@ -4,18 +4,18 @@ import java.util.Set;
 
 public class Developer extends BasicKitModel {
 
-    private String accountStatus;
+    private Long accountStatusId;
     private Long accountId;
     private Set<Long> skillIds;
     private Account account;
     private Set<Skill> skills;
 
-    public String getAccountStatus() {
-        return accountStatus;
+    public Long getAccountStatusId() {
+        return accountStatusId;
     }
 
-    public void setAccountStatus(String accountStatus) {
-        this.accountStatus = accountStatus;
+    public void setAccountStatusId(Long accountStatusId) {
+        this.accountStatusId = accountStatusId;
     }
 
     public Long getAccountId() {

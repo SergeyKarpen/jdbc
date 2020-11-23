@@ -39,7 +39,7 @@ public class MenuSkills {
             switch (inputNumber) {
                 case ("1"):
                     System.out.println(getAllMessage);
-                //    System.out.println((skillController.getAll()));
+
                     break;
                 case ("2"):
                     System.out.print(getByIdMessage);

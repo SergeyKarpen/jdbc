@@ -1,5 +1,7 @@
 package com.karpen.jdbc.view;
 
+import com.karpen.jdbc.util.ConnectToDataBase;
+
 import java.util.Scanner;
 
 public class MainMenu {
@@ -37,6 +39,7 @@ public class MainMenu {
                     break;
             }
         } while (!isExit);
+        ConnectToDataBase.closeConnectToDB(ConnectToDataBase.connectToDB());
         System.out.println(endMessage);
     }
 }

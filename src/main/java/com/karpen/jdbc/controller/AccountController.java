@@ -1,9 +1,9 @@
 package com.karpen.jdbc.controller;
 
-import com.karpen.jdbc.repository.io.JsonAccountRepositoryImpl;
+import com.karpen.jdbc.repository.jdbc.JdbcAccountsRepositoryImpl;
 
 public class AccountController {
-    com.karpen.jdbc.repository.AccountRepository accountRepository = new JsonAccountRepositoryImpl();
+    com.karpen.jdbc.repository.AccountRepository accountRepository = new JdbcAccountsRepositoryImpl();
 
     public AccountController() {
         this.accountRepository = accountRepository;

@@ -1,12 +1,11 @@
 package com.karpen.jdbc.controller;
 
-import com.karpen.jdbc.model.Skill;
 import com.karpen.jdbc.repository.SkillRepository;
-import com.karpen.jdbc.repository.io.JsonSkillRepositoryImpl;
-
-import java.io.IOException;
-import java.util.List;
+import com.karpen.jdbc.repository.jdbc.JdbcSkillsRepositoryImpl;
 
 public class SkillController {
+private SkillRepository skillRepository = new JdbcSkillsRepositoryImpl();
+
+
 
 }
