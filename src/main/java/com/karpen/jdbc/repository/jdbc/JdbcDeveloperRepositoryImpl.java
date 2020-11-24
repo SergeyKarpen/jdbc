@@ -33,9 +33,14 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
 
     @Override
     public Developer update(Developer developer) throws SQLException {
-        String name = developer.getName();
         Long id = developer.getId();
-        String sql = "UPDATE developers SET name =" + "'" + name + "'" + " WHERE id =" + id;
+
+        String sql = "UPDATE developers SET id =" + "'" + id + "'" + " WHERE id =" + id;
+        openStatement(connectToDB()).executeUpdate(sql);
+        closeStatement(openStatement(connectToDB()));
+
+        String name = developer.getName();
+        sql = "UPDATE developers SET name =" + "'" + name + "'" + " WHERE id =" + id;
         openStatement(connectToDB()).executeUpdate(sql);
         closeStatement(openStatement(connectToDB()));
 
@@ -52,10 +57,8 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         }
 
         Long idAccountStatus = developer.getAccountStatusId();
-        sql = "UPDATE developers SET id_account =" + "'" + idAccountStatus + "'" + " WHERE id =" + id;
+        sql = "UPDATE developers SET id_accountStatus =" + "'" + idAccountStatus + "'" + " WHERE id =" + id;
         openStatement(connectToDB()).executeUpdate(sql);
-        closeStatement(openStatement(connectToDB()));
-
         closeStatement(openStatement(connectToDB()));
         return getById(id);
     }
@@ -110,7 +113,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
-    public void deleteById(Long id) throws IOException {
+    public void deleteById(Long id) {
         String sql = "DELETE FROM developers WHERE id =" + id;
         try {
             openStatement(connectToDB()).executeUpdate(sql);
@@ -118,5 +121,24 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             throwables.printStackTrace();
         }
         closeStatement(openStatement(connectToDB()));
+    }
+
+    @Override
+    public Long maxId() throws SQLException {
+
+        /*
+        Long maxId = 0L;
+        String sql = "SELECT max(id) FROM developers";
+        ResultSet resultSet = result(openStatement(connectToDB()), sql);
+        while (resultSet.next()) {
+            maxId = resultSet.getLong("id");
+        }
+        closeStatement(openStatement(connectToDB()));
+        if (maxId==null) {
+            return 0L;
+        }
+        else return maxId;
+         */
+        return 0L;
     }
 }

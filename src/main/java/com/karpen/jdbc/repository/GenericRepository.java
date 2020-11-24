@@ -16,4 +16,5 @@ public interface GenericRepository<T, ID> {
 
     void deleteById(ID id) throws IOException, SQLException;
 
+    ID maxId() throws IOException, SQLException;
 }

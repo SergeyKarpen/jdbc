@@ -49,7 +49,6 @@ public class JdbcSkillsRepositoryImpl implements SkillRepository {
         }
         closeStatement(openStatement(connectToDB()));
         closeResult(resultSet);
-
         return skills;
     }
 
@@ -57,7 +56,7 @@ public class JdbcSkillsRepositoryImpl implements SkillRepository {
     public Skill getById(Long aLong) throws SQLException {
         String sql = "SELECT * FROM skills WHERE id =" + aLong;
         ResultSet resultSet = result(openStatement(connectToDB()), sql);
-        Skill skill = null;
+        Skill skill = new Skill();
         while (resultSet.next()) {
             Long id = resultSet.getLong("id");
             skill.setId(id);
@@ -78,5 +77,15 @@ public class JdbcSkillsRepositoryImpl implements SkillRepository {
             throwables.printStackTrace();
         }
         closeStatement(openStatement(connectToDB()));
+    }
+
+    public Long maxId() throws SQLException {
+        Long maxId = null;
+        String sql = "SELECT MAX(id) FROM skills";
+        ResultSet resultSet = result(openStatement(connectToDB()), sql);
+        while (resultSet.next()) {
+            maxId = resultSet.getLong(1);
+        }
+        return maxId;
     }
 }

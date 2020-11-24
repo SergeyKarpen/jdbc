@@ -13,9 +13,9 @@ public class JdbcAccountsRepositoryImpl implements com.karpen.jdbc.repository.Ac
 
     @Override
     public Account getById(Long id) throws SQLException {
-        String sql = "SELECT * FROM skills WHERE id =" + id;
+        String sql = "SELECT * FROM accounts WHERE id =" + id;
         ResultSet resultSet = result(openStatement(connectToDB()), sql);
-        Account account = null;
+        Account account = new Account();
         while (resultSet.next()) {
             id = resultSet.getLong("id");
             account.setId(id);
@@ -74,5 +74,15 @@ public class JdbcAccountsRepositoryImpl implements com.karpen.jdbc.repository.Ac
         closeStatement(openStatement(connectToDB()));
         closeResult(resultSet);
         return accounts;
+    }
+
+    public Long maxId() throws SQLException {
+        Long maxId = null;
+        String sql = "SELECT max(id) FROM accounts";
+        ResultSet resultSet = result(openStatement(connectToDB()), sql);
+        while (resultSet.next()) {
+            maxId = resultSet.getLong("id");
+        }
+        return maxId;
     }
 }

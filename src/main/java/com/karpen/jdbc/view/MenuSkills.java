@@ -1,18 +1,19 @@
 package com.karpen.jdbc.view;
 
 import com.karpen.jdbc.controller.SkillController;
+
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MenuSkills {
 
     private final String menuSelectionMessage = "Выберите необходимое действие:\n" +
             "1.Просмотреть список навыков\n" +
-            "2.Выбрать навык по id\n" +
-            "3.Добавить навык\n" +
-            "4.Удалить навык\n" +
-            "5.Изменить существующий навык\n" +
-            "6.Выход";
+            "2.Добавить навык\n" +
+            "3.Удалить навык\n" +
+            "4.Изменить существующий навык\n" +
+            "5.Выход";
 
     private final String getAllMessage = "Список навыков:";
 
@@ -39,31 +40,42 @@ public class MenuSkills {
             switch (inputNumber) {
                 case ("1"):
                     System.out.println(getAllMessage);
-
+                    try {
+                        System.out.println(skillController.getAll());
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     break;
                 case ("2"):
-                    System.out.print(getByIdMessage);
-                    int inputId = scanner.nextInt();
-               //     System.out.println(skillController.getById((long) inputId));
-                    break;
-                case ("3"):
                     System.out.print(saveMessage);
                     String inputNewStringSkill = scanner.nextLine();
-                 //   skillController.create(inputNewStringSkill);
+                    try {
+                        skillController.create(inputNewStringSkill);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     break;
-                case ("4"):
+                case ("3"):
                     System.out.print(deleteMessage);
                     int inputDelSkill = scanner.nextInt();
-                   // skillController.deleteById((long) inputDelSkill);
+                    try {
+                        skillController.deleteById((long) inputDelSkill);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     break;
-                case ("5"):
+                case ("4"):
                     System.out.print(getByIdMessage);
                     int inputUpdateSkillId = Integer.parseInt(scanner.nextLine());
                     System.out.println(editMessage);
                     String inputUpdateSkillName = scanner.nextLine();
-               //     skillController.update((long) inputUpdateSkillId, inputUpdateSkillName);
+                    try {
+                        skillController.update((long) inputUpdateSkillId, inputUpdateSkillName);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     break;
-                case ("6"):
+                case ("5"):
                     isExit = true;
                     break;
                 default:
@@ -73,12 +85,4 @@ public class MenuSkills {
         } while (!isExit);
         System.out.println(endMessage);
     }
-/*
-    public static void printAll(List<Skill> listSkill) {
-        for (Skill p : listSkill) {
-            System.out.println(p.getId() + p.getName());
-        }
-            }
-     */
-
 }

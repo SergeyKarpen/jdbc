@@ -7,8 +7,6 @@ public class Developer extends BasicKitModel {
     private Long accountStatusId;
     private Long accountId;
     private Set<Long> skillIds;
-    private Account account;
-    private Set<Skill> skills;
 
     public Long getAccountStatusId() {
         return accountStatusId;
@@ -34,25 +32,8 @@ public class Developer extends BasicKitModel {
         this.skillIds = skillIds;
     }
 
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    public Set<Skill> getSkills() {
-        return skills;
-    }
-
-    public void setSkills(Set<Skill> skills) {
-        this.skills = skills;
-    }
-
-
     @Override
     public String toString() {
-        return id + " " + name + " " + account + " " + skills + "\n";
+        return id + " " + name + " " + " " + "\n";
     }
 }
