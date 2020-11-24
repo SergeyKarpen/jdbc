@@ -24,7 +24,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         Set<Long> idSkills = developer.getSkillIds();
         Long idAccountStatus = developer.getAccountStatusId();
         for (Long idSkill : idSkills) {
-            String sql = "INSERT INTO developers (id, name, id_account, id_skill, id_accountStatus) values (" + id + "," + "'" + name + "'" + idAccount + idSkill + idAccountStatus + ")";
+            String sql = "INSERT INTO developers (id, name, id_account, id_skill, id_accountStatus) values (" + id + "," + "'" + name + "'" + "," + idAccount + "," + idSkill + "," + idAccountStatus + ")";
             openStatement(connectToDB()).executeUpdate(sql);
             closeStatement(openStatement(connectToDB()));
         }
