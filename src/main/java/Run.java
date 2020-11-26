@@ -1,4 +1,3 @@
-import com.karpen.jdbc.repository.jdbc.JdbcAccountsRepositoryImpl;
 import com.karpen.jdbc.view.MainMenu;
 
 import java.sql.SQLException;
@@ -14,5 +13,7 @@ class Run {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 }

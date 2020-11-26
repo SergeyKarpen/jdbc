@@ -2,6 +2,7 @@ package com.karpen.jdbc.repository.jdbc;
 
 import com.karpen.jdbc.model.Skill;
 import com.karpen.jdbc.repository.SkillRepository;
+import com.karpen.jdbc.util.ConnectToDataBase;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,13 +14,14 @@ import static com.karpen.jdbc.util.ConnectToDataBase.*;
 
 public class JdbcSkillsRepositoryImpl implements SkillRepository {
 
+    ConnectToDataBase connectToDataBase = new ConnectToDataBase();
+
     @Override
     public Skill create(Skill skill) throws SQLException {
         String name = skill.getName();
         Long id = skill.getId();
         String sql = "INSERT INTO skills (id, name) values (" + id + "," + "'" + name + "'" + ")";
-        openStatement(connectToDB()).executeUpdate(sql);
-        closeStatement(openStatement(connectToDB()));
+        connectToDataBase.resultExecuteUpdate(sql);
         return getById(id);
     }
 
@@ -28,8 +30,7 @@ public class JdbcSkillsRepositoryImpl implements SkillRepository {
         String name = skill.getName();
         Long id = skill.getId();
         String sql = "UPDATE skills SET name =" + "'" + name + "'" + "WHERE id =" + id;
-        openStatement(connectToDB()).executeUpdate(sql);
-        closeStatement(openStatement(connectToDB()));
+        connectToDataBase.resultExecuteUpdate(sql);
         return getById(id);
     }
 
@@ -69,14 +70,9 @@ public class JdbcSkillsRepositoryImpl implements SkillRepository {
     }
 
     @Override
-    public void deleteById(Long aLong) {
+    public void deleteById(Long aLong) throws SQLException {
         String sql = "DELETE FROM skills WHERE id =" + aLong;
-        try {
-            openStatement(connectToDB()).executeUpdate(sql);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        closeStatement(openStatement(connectToDB()));
+        connectToDataBase.resultExecuteUpdate (sql);
     }
 
     public Long maxId() throws SQLException {
@@ -88,4 +84,5 @@ public class JdbcSkillsRepositoryImpl implements SkillRepository {
         }
         return maxId;
     }
+
 }

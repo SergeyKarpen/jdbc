@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class ConnectToDataBase {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static final String DATABASE_URL = "jdbc:mysql://localhost/jdbc?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    static final String DATABASE_URL = "jdbc:mysql://localhost/developers?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
     static final String USER = "root";
     static final String PASSWORD = "paranido2";
@@ -51,14 +51,8 @@ public class ConnectToDataBase {
         }
     }
 
-    public static ResultSet result(Statement statement, String inputSQL) {
-        ResultSet resultSet = null;
-        try {
-            resultSet = statement.executeQuery(inputSQL);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return resultSet;
+    public static ResultSet result(Statement statement, String inputSQL) throws SQLException {
+        return statement.executeQuery(inputSQL);
     }
 
     public static void closeResult(ResultSet resultSet) {
@@ -67,5 +61,10 @@ public class ConnectToDataBase {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    public void resultExecuteUpdate(String sql) throws SQLException {
+        openStatement(connectToDB()).executeUpdate(sql);
+        closeStatement(openStatement(connectToDB()));
     }
 }

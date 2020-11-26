@@ -34,6 +34,6 @@ public class Developer extends BasicKitModel {
 
     @Override
     public String toString() {
-        return id + " " + name + " " + " " + "\n";
+        return id + " " + name;
     }
 }

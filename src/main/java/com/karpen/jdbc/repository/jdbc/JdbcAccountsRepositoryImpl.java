@@ -1,6 +1,7 @@
 package com.karpen.jdbc.repository.jdbc;
 
 import com.karpen.jdbc.model.Account;
+import com.karpen.jdbc.util.ConnectToDataBase;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +11,8 @@ import java.util.List;
 import static com.karpen.jdbc.util.ConnectToDataBase.*;
 
 public class JdbcAccountsRepositoryImpl implements com.karpen.jdbc.repository.AccountRepository {
+
+    ConnectToDataBase connectToDataBase = new ConnectToDataBase();
 
     @Override
     public Account getById(Long id) throws SQLException {
@@ -28,14 +31,9 @@ public class JdbcAccountsRepositoryImpl implements com.karpen.jdbc.repository.Ac
     }
 
     @Override
-    public void deleteById(Long aLong) {
-        String sql = "DELETE FROM accounts WHERE id =" + aLong;
-        try {
-            openStatement(connectToDB()).executeUpdate(sql);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        closeStatement(openStatement(connectToDB()));
+    public void deleteById(Long id) throws SQLException {
+        String sql = "DELETE FROM accounts WHERE id =" + id;
+        connectToDataBase.resultExecuteUpdate(sql);
     }
 
     @Override
@@ -43,8 +41,7 @@ public class JdbcAccountsRepositoryImpl implements com.karpen.jdbc.repository.Ac
         String name = account.getName();
         Long id = account.getId();
         String sql = "INSERT INTO accounts (id, name) values (" + id + "," + "'" + name + "'" + ")";
-        openStatement(connectToDB()).executeUpdate(sql);
-        closeStatement(openStatement(connectToDB()));
+        connectToDataBase.resultExecuteUpdate(sql);
         return getById(id);
     }
 
@@ -53,8 +50,7 @@ public class JdbcAccountsRepositoryImpl implements com.karpen.jdbc.repository.Ac
         String name = account.getName();
         Long id = account.getId();
         String sql = "UPDATE accounts SET name =" + "'" + name + "'" + "WHERE id =" + id;
-        openStatement(connectToDB()).executeUpdate(sql);
-        closeStatement(openStatement(connectToDB()));
+        connectToDataBase.resultExecuteUpdate(sql);
         return getById(id);
     }
 
