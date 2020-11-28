@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface GenericRepository<T, ID> {
+
     T create(T t) throws IOException, SQLException;
 
     T update(T t) throws IOException, SQLException;
