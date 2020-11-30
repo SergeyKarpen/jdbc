@@ -1,4 +1,4 @@
-package com.karpen.jdbc.repository.jdbc;
+package com.karpen.jdbc.service.serviceImpl;
 
 
 import com.karpen.jdbc.model.Developer;
@@ -14,9 +14,9 @@ import java.util.Set;
 
 import static com.karpen.jdbc.util.ConnectToDataBase.*;
 
-public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
+public class DeveloperServiceImpl implements DeveloperRepository {
 
-    ConnectToDataBase connectToDataBase = new ConnectToDataBase();
+  private final ConnectToDataBase connectToDataBase = new ConnectToDataBase();
 
     @Override
     public Developer create(Developer developer) throws SQLException {

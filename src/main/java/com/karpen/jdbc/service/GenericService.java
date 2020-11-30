@@ -1,11 +1,11 @@
-package com.karpen.jdbc.repository;
+package com.karpen.jdbc.service;
 
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-public interface GenericRepository<T, ID> {
+public interface GenericService<T, ID> {
 
     T create(T t) throws IOException, SQLException;
 

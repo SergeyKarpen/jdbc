@@ -2,7 +2,7 @@ package com.karpen.jdbc.controller;
 
 import com.karpen.jdbc.model.Skill;
 import com.karpen.jdbc.repository.SkillRepository;
-import com.karpen.jdbc.repository.jdbc.JdbcSkillsRepositoryImpl;
+import com.karpen.jdbc.service.serviceImpl.SkillsServiceImpl;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SkillController {
 
-    private SkillRepository skillRepository = new JdbcSkillsRepositoryImpl();
+    private SkillRepository skillRepository = new SkillsServiceImpl();
 
     public Skill create(String name) throws IOException, SQLException {
         Skill skill = new Skill();

@@ -1,4 +1,4 @@
-package com.karpen.jdbc.repository.jdbc;
+package com.karpen.jdbc.service.serviceImpl;
 
 import com.karpen.jdbc.model.Skill;
 import com.karpen.jdbc.repository.SkillRepository;
@@ -12,9 +12,9 @@ import java.util.List;
 import static com.karpen.jdbc.util.ConnectToDataBase.*;
 
 
-public class JdbcSkillsRepositoryImpl implements SkillRepository {
+public class SkillsServiceImpl implements SkillRepository {
 
-    ConnectToDataBase connectToDataBase = new ConnectToDataBase();
+  private final ConnectToDataBase connectToDataBase = new ConnectToDataBase();
 
     @Override
     public Skill create(Skill skill) throws SQLException {

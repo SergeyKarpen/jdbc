@@ -2,14 +2,14 @@ package com.karpen.jdbc.controller;
 
 import com.karpen.jdbc.model.Account;
 import com.karpen.jdbc.repository.AccountRepository;
-import com.karpen.jdbc.repository.jdbc.JdbcAccountsRepositoryImpl;
+import com.karpen.jdbc.service.serviceImpl.AccountsServiceImpl;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 public class AccountController {
-    private AccountRepository accountRepository = new JdbcAccountsRepositoryImpl();
+    private AccountRepository accountRepository = new AccountsServiceImpl();
 
 
     public Account create(String name) throws IOException, SQLException {

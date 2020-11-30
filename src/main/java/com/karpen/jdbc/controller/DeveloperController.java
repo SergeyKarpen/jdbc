@@ -2,7 +2,7 @@ package com.karpen.jdbc.controller;
 
 import com.karpen.jdbc.model.Developer;
 import com.karpen.jdbc.repository.DeveloperRepository;
-import com.karpen.jdbc.repository.jdbc.JdbcDeveloperRepositoryImpl;
+import com.karpen.jdbc.service.serviceImpl.DeveloperServiceImpl;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class DeveloperController {
 
-    private DeveloperRepository developerRepository = new JdbcDeveloperRepositoryImpl();
+    private DeveloperRepository developerRepository = new DeveloperServiceImpl();
 
     public Developer create(String name, Long id_account, Set<Long> skillId, Long id_accountStatus) throws IOException, SQLException {
         Developer developer = new Developer();

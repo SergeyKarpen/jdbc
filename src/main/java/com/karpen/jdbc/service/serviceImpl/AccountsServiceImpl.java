@@ -1,18 +1,18 @@
-package com.karpen.jdbc.repository.jdbc;
+package com.karpen.jdbc.service.serviceImpl;
 
 import com.karpen.jdbc.model.Account;
+import com.karpen.jdbc.repository.AccountRepository;
 import com.karpen.jdbc.util.ConnectToDataBase;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.karpen.jdbc.util.ConnectToDataBase.*;
 
-public class JdbcAccountsRepositoryImpl implements com.karpen.jdbc.repository.AccountRepository {
+public class AccountsServiceImpl implements AccountRepository {
 
-    ConnectToDataBase connectToDataBase = new ConnectToDataBase();
+   private final ConnectToDataBase connectToDataBase = new ConnectToDataBase();
 
     @Override
     public Account getById(Long id) throws SQLException {
