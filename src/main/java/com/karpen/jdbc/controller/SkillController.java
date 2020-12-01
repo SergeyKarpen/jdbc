@@ -12,11 +12,11 @@ public class SkillController {
 
     private SkillRepository skillRepository = new SkillsServiceImpl();
 
-    public Skill create(String name) throws IOException, SQLException {
+    public void create(String name) throws IOException, SQLException {
         Skill skill = new Skill();
         skill.setName(name);
         skill.setId(skillRepository.maxId()+1);
-        return skillRepository.create(skill);
+        skillRepository.create(skill);
     }
 
     public Skill update(Long id, String name) throws IOException, SQLException {
