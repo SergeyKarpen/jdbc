@@ -15,14 +15,17 @@ class SkillsServiceImplTest {
 
     private final SkillsServiceImpl mockSkillsService = mock(SkillsServiceImpl.class);
     private final Skill skill = mock(Skill.class);
-    private final List<Skill> skills = mock(List.class);
 
     // @Test create
     @Test
-    void create() throws SQLException {
+    void create_returnUpSkill() throws SQLException {
+        Skill createSkill = mockSkillsService.create(skill);
+        assertEquals(createSkill, mockSkillsService.create(skill));
+    }
+    @Test
+    void create_check() throws SQLException {
         mockSkillsService.create(skill);
         verify(mockSkillsService).create(skill);
-        // assertEquals(skill, mockSkillsService.create(skill));
     }
 
     // @Test update
@@ -71,12 +74,19 @@ class SkillsServiceImplTest {
 
     // @Test deleteById
     @Test
-    void deleteById() {
-
+    void deleteById_check() throws SQLException {
+        mockSkillsService.deleteById(anyLong());
+        verify(mockSkillsService).deleteById(anyLong());
+    }
+    @Test
+    void deleteById_return_throw() throws SQLException {
+       doThrow(new NullPointerException()).when(mockSkillsService).deleteById(-1L);
     }
 
     // @Test maxId
     @Test
-    void maxId() {
+    void maxId() throws SQLException {
+        mockSkillsService.maxId();
+        verify(mockSkillsService).maxId();
     }
 }
