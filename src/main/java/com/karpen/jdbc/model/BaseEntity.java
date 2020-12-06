@@ -1,7 +1,7 @@
 package com.karpen.jdbc.model;
 
-abstract class BasicKitModel {
-    String name;
+abstract class BaseEntity {
+
     Long id;
 
     public Long getId() {
@@ -12,17 +12,9 @@ abstract class BasicKitModel {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     @Override
     public String toString() {
-        return id + " " + name ;
+        return id + " ";
     }
 }
 

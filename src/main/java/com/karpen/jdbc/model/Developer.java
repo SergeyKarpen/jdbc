@@ -2,38 +2,44 @@ package com.karpen.jdbc.model;
 
 import java.util.Set;
 
-public class Developer extends BasicKitModel {
+public class Developer extends BaseEntity {
 
-    private Long accountStatusId;
-    private Long accountId;
-    private Set<Long> skillIds;
+    private String firstName;
+    private String lastName;
+    private Account account;
+    private Set<Skill> skills;
 
-    public Long getAccountStatusId() {
-        return accountStatusId;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setAccountStatusId(Long accountStatusId) {
-        this.accountStatusId = accountStatusId;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public Long getAccountId() {
-        return accountId;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public Set<Long> getSkillIds() {
-        return skillIds;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setSkillIds(Set<Long> skillIds) {
-        this.skillIds = skillIds;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
-    @Override
-    public String toString() {
-        return id + " " + name;
+    public Set<Skill> getSkills() {
+        return skills;
     }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
+    }
+
 }
+

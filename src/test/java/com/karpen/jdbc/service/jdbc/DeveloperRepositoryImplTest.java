@@ -1,9 +1,9 @@
-package com.karpen.jdbc.service.serviceImpl;
+package com.karpen.jdbc.service.jdbc;
 
 import com.karpen.jdbc.model.Developer;
+import com.karpen.jdbc.repository.jdbc.JdbcDeveloperRepositoryImpl;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,80 +11,80 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-class DeveloperServiceImplTest {
-    private final DeveloperServiceImpl mockDeveloperService = mock(DeveloperServiceImpl.class);
+class DeveloperRepositoryImplTest {
+    private final JdbcDeveloperRepositoryImpl mockDeveloperService = mock(JdbcDeveloperRepositoryImpl.class);
     private final Developer developer = mock(Developer.class);
 
-    // @Test create
     @Test
-    void create_return_UpDeveloper() throws SQLException {
+    void create_return_UpDeveloper() {
         Developer creatDeveloper = mockDeveloperService.create(developer);
         assertEquals(creatDeveloper, mockDeveloperService.create(developer));
     }
+
     @Test
-    void create_check() throws SQLException {
+    void create_check() {
         mockDeveloperService.create(developer);
         verify(mockDeveloperService).create(developer);
     }
 
-    // @Test update
     @Test
-    void update_check() throws SQLException {
+    void update_check() {
         mockDeveloperService.update(developer);
         verify(mockDeveloperService).update(developer);
     }
 
     @Test
-    void update_return_developer() throws SQLException {
+    void update_return_developer() {
         Developer developer1 = mockDeveloperService.update(developer);
         assertEquals(developer1, mockDeveloperService.update(developer));
     }
 
-    // @Test getAll
+
     @Test
-    void getAll_check() throws SQLException {
+    void getAll_check() {
         mockDeveloperService.getAll();
         verify(mockDeveloperService).getAll();
     }
 
     @Test
-    void getAll_return_developerList() throws SQLException {
+    void getAll_return_developerList() {
         List<Developer> developerList = new ArrayList<>();
         assertEquals(developerList, mockDeveloperService.getAll());
     }
 
-    // @Test getById
+
     @Test
-    void getById_return_check() throws SQLException {
+    void getById_return_check() {
         mockDeveloperService.getById(anyLong());
         verify(mockDeveloperService).getById(anyLong());
     }
 
     @Test
-    void getById_return_developer() throws SQLException {
+    void getById_return_developer() {
         when(mockDeveloperService.getById(1L)).thenReturn(developer);
         assertEquals(developer, mockDeveloperService.getById(1L));
     }
 
     @Test
-    void getById_return_throw() throws SQLException {
+    void getById_return_throw() {
         when(mockDeveloperService.getById(-1L)).thenThrow(NullPointerException.class);
     }
 
-    // @Test deleteById
+
     @Test
-    void deleteById_check() throws SQLException {
+    void deleteById_check() {
         mockDeveloperService.deleteById(anyLong());
         verify(mockDeveloperService).deleteById(anyLong());
     }
+
     @Test
-    void deleteById_return_throw() throws SQLException {
+    void deleteById_return_throw() {
         doThrow(new NullPointerException()).when(mockDeveloperService).deleteById(-1L);
     }
 
-    // @Test maxId
+
     @Test
-    void maxId() throws SQLException {
+    void maxId() {
         mockDeveloperService.maxId();
         verify(mockDeveloperService).maxId();
     }
