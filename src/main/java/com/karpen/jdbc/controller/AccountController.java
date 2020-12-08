@@ -1,6 +1,7 @@
 package com.karpen.jdbc.controller;
 
 import com.karpen.jdbc.model.Account;
+import com.karpen.jdbc.model.AccountStatus;
 import com.karpen.jdbc.repository.jdbc.JdbcAccountRepositoryImpl;
 
 import java.io.IOException;
@@ -11,16 +12,18 @@ public class AccountController {
     private final JdbcAccountRepositoryImpl accountRepository = new JdbcAccountRepositoryImpl();
 
 
-    public Account create(String name) throws IOException, SQLException {
+    public Account create(String content, String accountStatus) throws IOException, SQLException {
         Account account = new Account();
-        account.setName(name);
-        account.setId(accountRepository.maxId());
+        account.setContent(content);
+        account.setAccountStatus(AccountStatus.valueOf(accountStatus));
+        account.setId(accountRepository.lastId()+1);
         return accountRepository.create(account);
     }
 
-    public Account update(Long id, String name) throws IOException, SQLException {
+    public Account update(Long id, String content, String accountStatus) throws IOException, SQLException {
         Account account = new Account();
-        account.setName(name);
+        account.setContent(content);
+        account.setAccountStatus(AccountStatus.valueOf(accountStatus));
         account.setId(id);
         return accountRepository.update(account);
     }

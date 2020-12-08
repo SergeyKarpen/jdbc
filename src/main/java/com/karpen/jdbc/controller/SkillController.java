@@ -14,7 +14,7 @@ public class SkillController {
     public void create(String name) throws IOException, SQLException {
         Skill skill = new Skill();
         skill.setName(name);
-        skill.setId(skillRepository.maxId()+1);
+        skill.setId(skillRepository.maxId() + 1);
         skillRepository.create(skill);
     }
 

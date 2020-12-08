@@ -19,28 +19,52 @@ import static com.karpen.jdbc.util.ConnectToDataBase.*;
 public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
 
     private final ConnectToDataBase connectToDataBase = new ConnectToDataBase();
+    private final JdbcAccountRepositoryImpl jdbcAccountRepository = new JdbcAccountRepositoryImpl();
+    private final JdbcSkillRepositoryImpl jdbcSkillRepository = new JdbcSkillRepositoryImpl();
 
     @Override
     public Developer create(Developer developer) {
         Long id = developer.getId();
         String firstName = developer.getFirstName();
         String lastName = developer.getLastName();
-        Account account = developer.getAccount();
         Set<Skill> skills = developer.getSkills();
-        String sql = "INSERT INTO developers (id, firstName, lastName, account) values (" + id + "," + "'" + firstName + "'" + "," + lastName + "," + "'" + account + "'" + ")";
+        Account account = developer.getAccount();
+        Long idAccount = account.getId();
+        String sqlDeveloper = "INSERT INTO developer (id, firstName, lastName) values (" + id + "," + "'" + firstName + "'" + "," + "'" + lastName + "'" + ")";
         try {
-            connectToDataBase.resultExecuteUpdate(sql);
+            connectToDataBase.resultExecuteUpdate(sqlDeveloper);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
+        Long idSkill=null;
+
+
         for (Skill skill : skills) {
-            String sqlSkillsSet = "INSERT INTO devId_skillId (id_developers, id_skill) values (" + id + "," + "'" + skill.getId() + "'" + ")";
+            idSkill = skill.getId();
+            String sqlSkillsSet = "INSERT INTO developer_skills (developer_id, skill_id) values (" + id + "," + idSkill + ")";
+            if (idSkill == null) {
+                try {
+                    connectToDataBase.resultExecuteUpdate(sqlSkillsSet);
+                    break;
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
             try {
                 connectToDataBase.resultExecuteUpdate(sqlSkillsSet);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
+        }
+
+
+
+        String sqlAccountDeveloper = "UPDATE account SET developer_id =" + id + " WHERE id =" + idAccount;
+        try {
+            connectToDataBase.resultExecuteUpdate(sqlAccountDeveloper);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return getById(id);
     }
@@ -49,186 +73,151 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     public Developer update(Developer developer) {
         Long id = developer.getId();
 
-        String sql = "UPDATE developers SET id =" + "'" + id + "'" + " WHERE id =" + id;
+        String sql = "UPDATE developer SET id =" + id + " WHERE id =" + id;
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-        String name = developer.getName();
-        sql = "UPDATE developers SET name =" + "'" + name + "'" + " WHERE id =" + id;
+        String firstName = developer.getFirstName();
+        sql = "UPDATE developer SET name =" + "'" + firstName + "'" + " WHERE id =" + id;
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-        Long idAccount = developer.getAccountId();
-        sql = "UPDATE developers SET id_account =" + "'" + idAccount + "'" + " WHERE id =" + id;
+        String lastName = developer.getFirstName();
+        sql = "UPDATE developer SET name =" + "'" + lastName + "'" + " WHERE id =" + id;
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-/*
-        Set<Long> idSkills = developer.getSkillIds();
-        for (Long idSkill : idSkills) {
-            sql = "UPDATE developers SET id_skill =" + "'" + idSkill + "'" + " WHERE id =" + id;
-            connectToDataBase.resultExecuteUpdate (sql);
-        }
 
- */
-
-        Long idAccountStatus = developer.getAccountStatusId();
-        sql = "UPDATE developers SET id_accountStatus =" + "'" + idAccountStatus + "'" + " WHERE id =" + id;
+        Account account = developer.getAccount();
+        String accountContent = account.getContent();
+        sql = "UPDATE developer SET account_content =" + "'" + accountContent + "'" + " WHERE id =" + id;
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+
+        Set<Skill> idSkills = developer.getSkills();
+        for (Skill skill : idSkills) {
+            Long idSkill = skill.getId();
+            sql = "UPDATE developer_skills SET skill_id =" + idSkill + " WHERE id =" + id;
+            try {
+                connectToDataBase.resultExecuteUpdate(sql);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
         return getById(id);
     }
 
     @Override
     public List<Developer> getAll() {
-
         List<Developer> developers = new ArrayList<>();
-        String sql = "SELECT * FROM developers";
+        String sql = "SELECT * FROM developer";
         ResultSet resultSet = null;
         try {
             resultSet = result(openStatement(connectToDB()), sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         while (true) {
             try {
                 if (!resultSet.next()) break;
+                Long idDeveloper = resultSet.getLong(1);
+                developers.add(getById(idDeveloper));
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-            Developer developer = new Developer();
-            Long id = null;
-            try {
-                id = resultSet.getLong(1);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            developer.setId(id);
-            String name = null;
-            try {
-                name = resultSet.getString(2);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            developer.setName(name);
-            Long idAccount = null;
-            try {
-                idAccount = resultSet.getLong(3);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            developer.setAccountId(idAccount);
-            Long AccountStatusId = null;
-            try {
-                AccountStatusId = resultSet.getLong(4);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            developer.setAccountStatusId(AccountStatusId);
-            developers.add(developer);
         }
         closeStatement(openStatement(connectToDB()));
         closeResult(resultSet);
         return developers;
     }
+
     @Override
     public Developer getById(Long id) {
         String sql = "SELECT * FROM developer WHERE id =" + id;
-        ResultSet resultSet = null;
         Developer developer = new Developer();
-        Long IdAccount = null;
+        Account account = new Account();
+        ResultSet resultSet = null;
+        ResultSet resultSet1 = null;
+        ResultSet resultSet2 = null;
+
         while (true) {
             try {
                 resultSet = result(openStatement(connectToDB()), sql);
                 if (!resultSet.next()) break;
-                id = resultSet.getLong("id");
+                id = resultSet.getLong(1);
                 developer.setId(id);
-                String firstName = resultSet.getString("firstName");
+                String firstName = resultSet.getString(2);
                 developer.setFirstName(firstName);
-                String lastName = resultSet.getString("lastName");
+                String lastName = resultSet.getString(3);
                 developer.setLastName(lastName);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-            finally {
-                closeStatement(openStatement(connectToDB()));
-                assert resultSet != null;
-                closeResult(resultSet);
-            }
-            String sqlAccountContent = "SELECT * FROM developerId_accountId  WHERE id =" + id;
+        }
+        closeStatement(openStatement(connectToDB()));
+        closeResult(resultSet);
+
+        String sqlAccountContent = "SELECT id FROM account WHERE developer_id =" + id;
+        while (true) {
             try {
-                resultSet = result(openStatement(connectToDB()), sqlAccountContent);
+                resultSet1 = result(openStatement(connectToDB()), sqlAccountContent);
+                if (!resultSet1.next()) break;
+                Long idAccount = resultSet1.getLong(1);
+                developer.setAccount(jdbcAccountRepository.getById(idAccount));
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-            while (true) {
-                try {
-                    if (!resultSet.next()) break;
-                    IdAccount = resultSet.getLong("id_account");
-                  } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                finally {
-                    closeStatement(openStatement(connectToDB()));
-                    assert resultSet != null;
-                    closeResult(resultSet);
-                }
-
-                String sqlAccountContentById = "SELECT * FROM account WHERE id =" + IdAccount;
-                try {
-                    resultSet = result(openStatement(connectToDB()), sqlAccountContentById);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                String accountContent = resultSet.getString("content");
-                developer.setAccount();
-            }
         }
+        closeStatement(openStatement(connectToDB()));
+        closeResult(resultSet1);
 
-
-        String sql2 = "SELECT id_skill FROM devId_skillId WHERE id_developers =" + developer.getId();
+        String sqlSkillsDeveloper = "SELECT skill_id FROM developer_skills WHERE developer_id =" + id;
         Set<Long> idSkills = new HashSet<>();
-        ResultSet resultSet2 = null;
         try {
-            resultSet2 = result(openStatement(connectToDB()), sql2);
+            resultSet2 = result(openStatement(connectToDB()), sqlSkillsDeveloper);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
         while (true) {
             try {
                 if (!resultSet2.next()) break;
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-            Long idSkill = null;
             try {
-                idSkill = resultSet2.getLong("id_skill");
+                Long idSkill = resultSet2.getLong("skill_id");
+                idSkills.add(idSkill);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-            idSkills.add(idSkill);
         }
         closeStatement(openStatement(connectToDB()));
-        closeResult(resultSet);
-        developer.setSkillIds(idSkills);
+        closeResult(resultSet2);
+
+        Set<Skill> skills = new HashSet<>();
+        for (Long skillId : idSkills) {
+            skills.add(jdbcSkillRepository.getById(skillId));
+        }
+
+        developer.setSkills(skills);
         return developer;
     }
 
     @Override
     public void deleteById(Long id) {
-        String sql = "DELETE FROM developers WHERE id =" + id;
+        String sql = "DELETE FROM developer WHERE id =" + id;
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
@@ -236,9 +225,9 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         }
     }
 
-    public Long maxId() {
-        Long maxId = null;
-        String sql = "SELECT MAX(id) FROM developers";
+    public Long lastId() {
+        Long lastId = 0L;
+        String sql = "SELECT id FROM DEVELOPER ORDER BY id DESC LIMIT 1";
         ResultSet resultSet = null;
         try {
             resultSet = result(openStatement(connectToDB()), sql);
@@ -252,12 +241,11 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
                 throwables.printStackTrace();
             }
             try {
-                maxId = resultSet.getLong(1);
+                lastId = resultSet.getLong(1);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
-        closeStatement(openStatement(connectToDB()));
-        return maxId;
+        return lastId;
     }
 }

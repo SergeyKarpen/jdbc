@@ -47,7 +47,12 @@ public class MenuSkills {
                     }
                     break;
                 case ("2"):
-                    System.out.print(saveMessage);
+                    System.out.println(saveMessage);
+                    try {
+                        System.out.println(skillController.getAll());
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     String inputNewStringSkill = scanner.nextLine();
                     try {
                         skillController.create(inputNewStringSkill);
@@ -56,7 +61,12 @@ public class MenuSkills {
                     }
                     break;
                 case ("3"):
-                    System.out.print(deleteMessage);
+                    System.out.println(deleteMessage);
+                    try {
+                        System.out.println(skillController.getAll());
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     int inputDelSkill = scanner.nextInt();
                     try {
                         skillController.deleteById((long) inputDelSkill);
@@ -65,7 +75,12 @@ public class MenuSkills {
                     }
                     break;
                 case ("4"):
-                    System.out.print(getByIdMessage);
+                    System.out.println(getByIdMessage);
+                    try {
+                        System.out.println(skillController.getAll());
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     int inputUpdateSkillId = Integer.parseInt(scanner.nextLine());
                     System.out.println(editMessage);
                     String inputUpdateSkillName = scanner.nextLine();

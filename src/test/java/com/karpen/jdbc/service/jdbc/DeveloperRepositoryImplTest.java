@@ -85,7 +85,7 @@ class DeveloperRepositoryImplTest {
 
     @Test
     void maxId() {
-        mockDeveloperService.maxId();
-        verify(mockDeveloperService).maxId();
+        mockDeveloperService.lastId();
+        verify(mockDeveloperService).lastId();
     }
 }

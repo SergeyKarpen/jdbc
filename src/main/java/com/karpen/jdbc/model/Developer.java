@@ -41,5 +41,13 @@ public class Developer extends BaseEntity {
         this.skills = skills;
     }
 
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", account=" + account +
+                ", skills=" + skills;
+    }
 }
 

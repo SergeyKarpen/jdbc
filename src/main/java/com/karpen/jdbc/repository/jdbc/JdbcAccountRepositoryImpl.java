@@ -22,6 +22,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         ResultSet resultSet = null;
         Account account = new Account();
         String content = null;
+        String accountStatus = null;
         try {
             resultSet = result(openStatement(connectToDB()), sql);
         } catch (SQLException throwables) {
@@ -30,10 +31,13 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         while (true) {
             try {
                 if (!resultSet.next()) break;
-                id = resultSet.getLong("id");
+                id = resultSet.getLong(1);
                 account.setId(id);
-                content = resultSet.getString("content");
+                content = resultSet.getString(2);
                 account.setContent(content);
+                accountStatus = resultSet.getString(3);
+                account.setAccountStatus(AccountStatus.valueOf(accountStatus));
+
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -59,7 +63,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         Long id = account.getId();
         String accountStatus = String.valueOf(account.getAccountStatus());
 
-        String sql = "INSERT INTO account (id, content, accountStatus_data) values (" + id + "," + "'" + content + "'" + "," + "'" + accountStatus + "'" + ")";
+        String sql = "INSERT INTO account (id, content, accountStatus) values (" + id + "," + "'" + content + "'" + "," + "'" + accountStatus + "'" + ")";
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
@@ -73,7 +77,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         String content = account.getContent();
         Long id = account.getId();
         String accountStatus = String.valueOf(account.getAccountStatus());
-        String sql = "UPDATE account SET content =" + "'" + content + "'" + "," + "accountStatus_data = " + "'" + accountStatus + "'" + "WHERE id =" + id;
+        String sql = "UPDATE account SET content =" + "'" + content + "'" + "," + "accountStatus = " + "'" + accountStatus + "'" + "WHERE id =" + id;
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
@@ -86,7 +90,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
     public List<Account> getAll() {
         List<Account> accounts = new ArrayList<>();
         String sql = "SELECT * FROM account";
-        Account account = new Account();
+
         ResultSet resultSet = null;
         String content = null;
         Long id = null;
@@ -99,11 +103,12 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         while (true) {
             try {
                 if (!resultSet.next()) break;
-                id = resultSet.getLong("id");
+                Account account = new Account();
+                id = resultSet.getLong(1);
                 account.setId(id);
-                content = resultSet.getString("name");
+                content = resultSet.getString(2);
                 account.setContent(content);
-                accountStatus = resultSet.getString("accountStatus_data");
+                accountStatus = resultSet.getString(3);
                 account.setAccountStatus(AccountStatus.valueOf(accountStatus));
                 accounts.add(account);
             } catch (SQLException throwables) {
@@ -115,9 +120,9 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         return accounts;
     }
 
-    public Long maxId() {
-        Long maxId = null;
-        String sql = "SELECT max(id) FROM account";
+    public Long lastId() {
+        Long lastId = 0L;
+        String sql = "SELECT id FROM account ORDER BY id DESC LIMIT 1";
         ResultSet resultSet = null;
         try {
             resultSet = result(openStatement(connectToDB()), sql);
@@ -131,11 +136,12 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
                 throwables.printStackTrace();
             }
             try {
-                maxId = resultSet.getLong("id");
+                lastId = resultSet.getLong(1);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
-        return maxId;
+        return lastId;
     }
+
 }

@@ -3,7 +3,6 @@ package com.karpen.jdbc.view;
 import com.karpen.jdbc.controller.AccountController;
 import com.karpen.jdbc.controller.DeveloperController;
 import com.karpen.jdbc.controller.SkillController;
-import com.karpen.jdbc.model.Account;
 
 import java.util.HashSet;
 import java.util.Scanner;
@@ -13,7 +12,7 @@ public class MenuDevelopers {
 
     private final String menuSelectionMessage = "Выберите необходимое действие:\n" +
             "1.Показать всех developers\n" +
-            "2.Создать developers\n" +
+            "2.Создать developer\n" +
             "3.Удалить developer\n" +
             "4.Изменить существующего developer\n" +
             "5.Выход";
@@ -23,15 +22,15 @@ public class MenuDevelopers {
             "2-DELETED;" +
             "3-BANNED";
 
-    private final String getAllMessage = "Весь список Developers:";
+    private final String getAllMessage = "Весь список developer:";
 
-    private final String getByIdMessage = "Введите id для выбора Developers ";
+    private final String getByIdMessage = "Введите id для выбора developer";
 
-    private final String deleteMessage = "Выберите Developers для его удаления из списка";
+    private final String deleteMessage = "Выберите developer для его удаления из списка";
 
     private final String incorrectInputMessage = "Неверный ввод, повторите";
 
-    private final String endMessage = "Выход из меню Developers";
+    private final String endMessage = "Выход из меню developer";
 
     public void showMenuDevelopers() throws Exception {
         DeveloperController developerController = new DeveloperController();
@@ -49,8 +48,10 @@ public class MenuDevelopers {
                     System.out.println(developerController.getAll());
                     break;
                 case ("2"):
-                    System.out.println("Впишите имя developer");
-                    String name = scanner.nextLine();
+                    System.out.println("Впишите First Name for developer");
+                    String firstName = scanner.nextLine();
+                    System.out.println("Впишите Last Name for developer");
+                    String lastname = scanner.nextLine();
                     Set<Long> skillIds = new HashSet<>();
                     boolean pip = true;
                     do {
@@ -65,22 +66,10 @@ public class MenuDevelopers {
                         }
                     }
                     while (pip);
-
-                    System.out.println("Выбрать Account:");
-                    System.out.print(accountController.getAll());
+                    System.out.println("Выбрать Account по id:");
+                    System.out.println(accountController.getAll());
                     String accountId = scanner.nextLine();
-                    Account account = accountController.getById(Long.valueOf(accountId));
-
-                    System.out.println(AccountSelectionMessage);
-                    String idstatus = scanner.nextLine();
-                    if (idstatus.equalsIgnoreCase("1")) {
-                        idstatus = String.valueOf(1);
-                    } else if (idstatus.equalsIgnoreCase("2")) {
-                        idstatus = String.valueOf(2);
-                    } else if (idstatus.equalsIgnoreCase("3")) {
-                        idstatus = String.valueOf(3);
-                    } else idstatus = String.valueOf(3);
-                    developerController.create(name, account.getId(), skillIds, Long.valueOf(idstatus));
+                    developerController.create(firstName, lastname, Long.valueOf(accountId), skillIds);
                     break;
                 case ("3"):
                     System.out.println(deleteMessage);
@@ -91,10 +80,14 @@ public class MenuDevelopers {
                 case ("4"):
                     System.out.println(getByIdMessage);
                     System.out.println(developerController.getAll());
-                    int upId = Integer.parseInt((scanner.nextLine()));
+                    int idUp = Integer.parseInt((scanner.nextLine()));
 
-                    System.out.println("Впишите имя developer");
-                    String upName = scanner.nextLine();
+                    System.out.println("Впишите First Name for developer");
+                    String firstNameUp = scanner.nextLine();
+
+                    System.out.println("Впишите Last Name for developer");
+                    String lastNameUp = scanner.nextLine();
+
                     Set<Long> upSkillIds = new HashSet<>();
                     boolean pup = true;
                     do {
@@ -109,22 +102,10 @@ public class MenuDevelopers {
                         }
                     }
                     while (pup);
-
-                    System.out.println("Выбрать Account:");
+                    System.out.println("Выбрать id Account for developer:");
                     System.out.println(accountController.getAll());
                     String upAccountId = scanner.nextLine();
-                    Account UpAccount = accountController.getById(Long.valueOf(upAccountId));
-                    System.out.println(AccountSelectionMessage);
-                    String upStatusId = scanner.nextLine();
-                    if (upStatusId.equalsIgnoreCase("1")) {
-                        upStatusId = String.valueOf(1);
-                    } else if (upStatusId.equalsIgnoreCase("2")) {
-                        upStatusId = String.valueOf(2);
-                    } else if (upStatusId.equalsIgnoreCase("3")) {
-                        upStatusId = String.valueOf(3);
-                    } else upStatusId = String.valueOf(3);
-
-                    developerController.update(upName,(long) upId, UpAccount.getId(), upSkillIds, Long.valueOf(upStatusId));
+                    developerController.update(firstNameUp,lastNameUp, (long)idUp, Long.valueOf(upAccountId), upSkillIds);
                     break;
                 case ("5"):
                     isExit = true;

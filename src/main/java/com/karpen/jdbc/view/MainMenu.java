@@ -1,6 +1,7 @@
 package com.karpen.jdbc.view;
 
 import com.karpen.jdbc.util.ConnectToDataBase;
+import liquibase.pro.packaged.M;
 
 import java.util.Scanner;
 
@@ -9,7 +10,8 @@ public class MainMenu {
     private final String menuSelectionMessage = "Выберите необходимое действие:\n" +
             "1.Работа с developers\n" +
             "2.Работа сo skills\n" +
-            "3.Выход";
+            "3.Работа с accounts\n" +
+            "4.Выход";
 
     private final String incorrectInputMessage = "Неверный ввод, повторите";
 
@@ -32,6 +34,10 @@ public class MainMenu {
                     consoleSkills.showMenuSkills();
                     break;
                 case ("3"):
+                    MenuAccounts consoleAccounts = new MenuAccounts();
+                    consoleAccounts.showMenuAccounts();
+                    break;
+                case ("4"):
                     isExit = true;
                     break;
                 default:

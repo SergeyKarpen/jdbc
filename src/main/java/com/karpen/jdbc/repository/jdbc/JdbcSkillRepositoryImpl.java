@@ -46,7 +46,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     public List<Skill> getAll() {
         List<Skill> skills = new ArrayList<>();
         String sql = "SELECT * FROM skill";
-        Skill skill = new Skill();
+
         ResultSet resultSet = null;
         String name = null;
         Long id = null;
@@ -59,8 +59,9 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
             try {
                 assert resultSet != null;
                 if (!resultSet.next()) break;
-                id = resultSet.getLong("id");
-                name = resultSet.getString("name");
+                Skill skill = new Skill();
+                id = resultSet.getLong(1);
+                name = resultSet.getString(2);
                 skill.setId(id);
                 skill.setName(name);
                 skills.add(skill);
@@ -74,37 +75,33 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
-    public Skill getById(Long aLong) {
-        String sql = "SELECT * FROM skill WHERE id =" + aLong;
+    public Skill getById(Long id) {
+        String sql = "SELECT * FROM skill WHERE id =" + id;
         Skill skill = new Skill();
+        skill.setId(id);
         ResultSet resultSet = null;
-        Long id = null;
-        String name = null;
-
+        try {
+            resultSet = result(openStatement(connectToDB()), sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         while (true) {
             try {
                 if (!resultSet.next()) break;
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            try {
-                resultSet = result(openStatement(connectToDB()), sql);
-                id = resultSet.getLong("id");
-                skill.setId(id);
-                name = resultSet.getString("name");
+                String name = resultSet.getString("name");
                 skill.setName(name);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-            closeStatement(openStatement(connectToDB()));
-            closeResult(resultSet);
-        }
+         }
+        closeStatement(openStatement(connectToDB()));
+        closeResult(resultSet);
         return skill;
     }
 
     @Override
     public void deleteById(Long aLong) {
-        String sql = "DELETE FROM skills WHERE id =" + aLong;
+        String sql = "DELETE FROM skill WHERE id =" + aLong;
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
@@ -113,7 +110,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
     }
 
     public Long maxId() {
-        Long maxId = null;
+        Long maxId = 0L;
         String sql = "SELECT MAX(id) FROM skill";
         ResultSet resultSet = null;
         try {

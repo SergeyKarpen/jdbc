@@ -21,5 +21,12 @@ public class Account extends BaseEntity {
     public void setAccountStatus(AccountStatus accountStatus) {
         this.accountStatus = accountStatus;
     }
+
+    @Override
+    public String toString() {
+        return "content=" + content +
+                ", accountStatus=" + accountStatus +
+                ", id=" + id;
+    }
 }
 

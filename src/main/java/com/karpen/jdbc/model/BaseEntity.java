@@ -12,9 +12,6 @@ abstract class BaseEntity {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return id + " ";
-    }
+
 }
 

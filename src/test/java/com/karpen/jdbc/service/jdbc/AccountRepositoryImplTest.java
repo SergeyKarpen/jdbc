@@ -5,11 +5,10 @@ import com.karpen.jdbc.model.Skill;
 import com.karpen.jdbc.repository.jdbc.JdbcAccountRepositoryImpl;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -52,7 +51,7 @@ class AccountRepositoryImplTest {
     }
 
     @Test
-    void getAll_return_skillsList() throws SQLException {
+    void getAll_return_skillsList()  {
         List<Skill> skillList = new ArrayList<>();
         assertEquals(skillList, mockAccountService.getAll());
     }
@@ -71,7 +70,7 @@ class AccountRepositoryImplTest {
     }
 
     @Test
-    void getById_return_throw() throws SQLException {
+    void getById_return_throw() {
         when(mockAccountService.getById(-1L)).thenThrow(NullPointerException.class);
     }
 
@@ -88,7 +87,7 @@ class AccountRepositoryImplTest {
 
     @Test
     void maxId() {
-        mockAccountService.maxId();
-        verify(mockAccountService).maxId();
+        mockAccountService.lastId();
+        verify(mockAccountService).lastId();
     }
 }
