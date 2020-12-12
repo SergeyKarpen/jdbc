@@ -16,7 +16,7 @@ public class AccountController {
         Account account = new Account();
         account.setContent(content);
         account.setAccountStatus(AccountStatus.valueOf(accountStatus));
-        account.setId(accountRepository.lastId()+1);
+        account.setId(accountRepository.lastId());
         return accountRepository.create(account);
     }
 

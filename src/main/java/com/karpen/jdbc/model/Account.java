@@ -25,8 +25,8 @@ public class Account extends BaseEntity {
     @Override
     public String toString() {
         return "content=" + content +
-                ", accountStatus=" + accountStatus +
-                ", id=" + id;
+                " accountStatus=" + accountStatus +
+                " id=" + id;
     }
 }
 

@@ -26,7 +26,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return getById(id);
+        return skill;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return getById(id);
+        return skill;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-         }
+        }
         closeStatement(openStatement(connectToDB()));
         closeResult(resultSet);
         return skill;
@@ -131,6 +131,8 @@ public class JdbcSkillRepositoryImpl implements SkillRepository {
                 throwables.printStackTrace();
             }
         }
-        return maxId;
+        closeStatement(openStatement(connectToDB()));
+        closeResult(resultSet);
+        return maxId + 1;
     }
 }

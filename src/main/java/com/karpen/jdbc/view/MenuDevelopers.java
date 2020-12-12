@@ -105,7 +105,7 @@ public class MenuDevelopers {
                     System.out.println("Выбрать id Account for developer:");
                     System.out.println(accountController.getAll());
                     String upAccountId = scanner.nextLine();
-                    developerController.update(firstNameUp,lastNameUp, (long)idUp, Long.valueOf(upAccountId), upSkillIds);
+                    developerController.update(firstNameUp, lastNameUp, (long) idUp, Long.valueOf(upAccountId), upSkillIds);
                     break;
                 case ("5"):
                     isExit = true;

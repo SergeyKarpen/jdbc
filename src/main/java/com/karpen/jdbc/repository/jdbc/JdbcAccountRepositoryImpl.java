@@ -21,8 +21,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         String sql = "SELECT * FROM account WHERE id =" + id;
         ResultSet resultSet = null;
         Account account = new Account();
-        String content = null;
-        String accountStatus = null;
+        account.setId(id);
         try {
             resultSet = result(openStatement(connectToDB()), sql);
         } catch (SQLException throwables) {
@@ -31,11 +30,9 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         while (true) {
             try {
                 if (!resultSet.next()) break;
-                id = resultSet.getLong(1);
-                account.setId(id);
-                content = resultSet.getString(2);
+                String content = resultSet.getString(2);
                 account.setContent(content);
-                accountStatus = resultSet.getString(3);
+                String  accountStatus = resultSet.getString(3);
                 account.setAccountStatus(AccountStatus.valueOf(accountStatus));
 
             } catch (SQLException throwables) {
@@ -69,7 +66,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return getById(id);
+        return account;
     }
 
     @Override
@@ -83,7 +80,7 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return getById(id);
+        return account;
     }
 
     @Override
@@ -141,7 +138,9 @@ public class JdbcAccountRepositoryImpl implements AccountRepository {
                 throwables.printStackTrace();
             }
         }
-        return lastId;
+        closeStatement(openStatement(connectToDB()));
+        closeResult(resultSet);
+        return lastId+1;
     }
 
 }

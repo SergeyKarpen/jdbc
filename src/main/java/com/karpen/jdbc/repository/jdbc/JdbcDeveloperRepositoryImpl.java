@@ -37,9 +37,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             throwables.printStackTrace();
         }
 
-        Long idSkill=null;
-
-
+        Long idSkill = null;
         for (Skill skill : skills) {
             idSkill = skill.getId();
             String sqlSkillsSet = "INSERT INTO developer_skills (developer_id, skill_id) values (" + id + "," + idSkill + ")";
@@ -58,15 +56,13 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
             }
         }
 
-
-
         String sqlAccountDeveloper = "UPDATE account SET developer_id =" + id + " WHERE id =" + idAccount;
         try {
             connectToDataBase.resultExecuteUpdate(sqlAccountDeveloper);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return getById(id);
+        return developer;
     }
 
     @Override
@@ -81,7 +77,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         }
 
         String firstName = developer.getFirstName();
-        sql = "UPDATE developer SET name =" + "'" + firstName + "'" + " WHERE id =" + id;
+        sql = "UPDATE developer SET firstName =" + "'" + firstName + "'" + " WHERE id =" + id;
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
@@ -89,7 +85,7 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         }
 
         String lastName = developer.getFirstName();
-        sql = "UPDATE developer SET name =" + "'" + lastName + "'" + " WHERE id =" + id;
+        sql = "UPDATE developer SET lastName =" + "'" + lastName + "'" + " WHERE id =" + id;
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
@@ -97,8 +93,8 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         }
 
         Account account = developer.getAccount();
-        String accountContent = account.getContent();
-        sql = "UPDATE developer SET account_content =" + "'" + accountContent + "'" + " WHERE id =" + id;
+        Long accountID = account.getId();
+        sql = "UPDATE account SET developer_id =" + id + " WHERE id =" + accountID;
         try {
             connectToDataBase.resultExecuteUpdate(sql);
         } catch (SQLException throwables) {
@@ -108,14 +104,14 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         Set<Skill> idSkills = developer.getSkills();
         for (Skill skill : idSkills) {
             Long idSkill = skill.getId();
-            sql = "UPDATE developer_skills SET skill_id =" + idSkill + " WHERE id =" + id;
+            sql = "UPDATE developer_skills SET skill_id =" + idSkill + " WHERE developer_id =" + id;
             try {
                 connectToDataBase.resultExecuteUpdate(sql);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
-        return getById(id);
+        return developer;
     }
 
     @Override
@@ -146,17 +142,18 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
     public Developer getById(Long id) {
         String sql = "SELECT * FROM developer WHERE id =" + id;
         Developer developer = new Developer();
-        Account account = new Account();
+        developer.setId(id);
         ResultSet resultSet = null;
-        ResultSet resultSet1 = null;
-        ResultSet resultSet2 = null;
+        try {
+            resultSet = result(openStatement(connectToDB()), sql);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
         while (true) {
             try {
-                resultSet = result(openStatement(connectToDB()), sql);
+                assert resultSet != null;
                 if (!resultSet.next()) break;
-                id = resultSet.getLong(1);
-                developer.setId(id);
                 String firstName = resultSet.getString(2);
                 developer.setFirstName(firstName);
                 String lastName = resultSet.getString(3);
@@ -169,9 +166,15 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         closeResult(resultSet);
 
         String sqlAccountContent = "SELECT id FROM account WHERE developer_id =" + id;
+        ResultSet resultSet1 = null;
+        try {
+            resultSet1 = result(openStatement(connectToDB()), sqlAccountContent);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         while (true) {
             try {
-                resultSet1 = result(openStatement(connectToDB()), sqlAccountContent);
+                assert resultSet1 != null;
                 if (!resultSet1.next()) break;
                 Long idAccount = resultSet1.getLong(1);
                 developer.setAccount(jdbcAccountRepository.getById(idAccount));
@@ -183,7 +186,9 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
         closeResult(resultSet1);
 
         String sqlSkillsDeveloper = "SELECT skill_id FROM developer_skills WHERE developer_id =" + id;
-        Set<Long> idSkills = new HashSet<>();
+        Set<Skill> skills = new HashSet<>();
+
+        ResultSet resultSet2 = null;
         try {
             resultSet2 = result(openStatement(connectToDB()), sqlSkillsDeveloper);
         } catch (SQLException throwables) {
@@ -192,25 +197,16 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
 
         while (true) {
             try {
+                assert resultSet2 != null;
                 if (!resultSet2.next()) break;
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            try {
-                Long idSkill = resultSet2.getLong("skill_id");
-                idSkills.add(idSkill);
+                Long idSkill = resultSet2.getLong(1);
+                skills.add(jdbcSkillRepository.getById(idSkill));
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
         closeStatement(openStatement(connectToDB()));
         closeResult(resultSet2);
-
-        Set<Skill> skills = new HashSet<>();
-        for (Long skillId : idSkills) {
-            skills.add(jdbcSkillRepository.getById(skillId));
-        }
-
         developer.setSkills(skills);
         return developer;
     }
@@ -246,6 +242,8 @@ public class JdbcDeveloperRepositoryImpl implements DeveloperRepository {
                 throwables.printStackTrace();
             }
         }
-        return lastId;
+        closeStatement(openStatement(connectToDB()));
+        closeResult(resultSet);
+        return lastId + 1;
     }
 }

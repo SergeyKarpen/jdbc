@@ -23,7 +23,7 @@ public class DeveloperController {
         Set<Skill> skills = new HashSet<>();
         developer.setFirstName(firstName);
         developer.setLastName(lastName);
-        developer.setId(jdbcDeveloperRepository.lastId() + 1);
+        developer.setId(jdbcDeveloperRepository.lastId());
         developer.setAccount(jdbcAccountRepository.getById(id_account));
         for (Long aLong : skillId) {
             skills.add(jdbcSkillRepository.getById(aLong));
